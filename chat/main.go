@@ -22,19 +22,6 @@ func (t *templateHander) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-    //http.HandleFunc("/", func(w http.ResponseWriter, r * http.Request) {
-    //    w.Write([]byte(`
-    //    <html>
-    //        <head>
-    //    	<title>chat</title>
-    //        </head>
-    //        <body>
-    //    	let's play chat!!
-    //        </body>
-    //    </html>
-    //    `))
-    //})
-
     http.Handle("/", &templateHander{filename: "top.html"})
 
     if err := http.ListenAndServe(":8080", nil); err != nil {
