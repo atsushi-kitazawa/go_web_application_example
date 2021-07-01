@@ -4,9 +4,12 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	_ "os"
 	"path/filepath"
 	"sync"
 	"text/template"
+
+	_ "github.com/atsushi-kitazawa/go_web_application_example/trace"
 )
 
 type templateHander struct {
@@ -26,7 +29,10 @@ func main() {
     var addr = flag.String("addr", ":8080", "address of application")
     flag.Parse()
     r := newRoom()
-    http.Handle("/", &templateHander{filename: "top.html"})
+    //r.tracer = trace.New(os.Stdout)
+    http.Handle("/chat", MustAuth(&templateHander{filename: "top.html"}))
+    http.Handle("/login",&templateHander{filename: "login.html"})
+    http.HandleFunc("/auth/",loginHander)
     http.Handle("/room", r)
 
     go r.run()
