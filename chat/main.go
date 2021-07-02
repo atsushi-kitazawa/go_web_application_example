@@ -4,12 +4,16 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 	_ "os"
 	"path/filepath"
 	"sync"
 	"text/template"
 
-	_ "github.com/atsushi-kitazawa/go_web_application_example/trace"
+	"github.com/atsushi-kitazawa/go_web_application_example/credential"
+	"github.com/atsushi-kitazawa/go_web_application_example/trace"
+	"github.com/stretchr/gomniauth"
+	"github.com/stretchr/gomniauth/providers/google"
 )
 
 type templateHander struct {
@@ -28,6 +32,18 @@ func (t *templateHander) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func main() {
     var addr = flag.String("addr", ":8080", "address of application")
     flag.Parse()
+
+    // load credentail
+    cred := credential.Load()
+    t := trace.New(os.Stdout)
+    t.Trace(cred.SecurityKey)
+    t.Trace(cred.ClientId)
+    t.Trace(cred.Secret)
+    gomniauth.SetSecurityKey(cred.SecurityKey)
+    gomniauth.WithProviders(
+      google.New(cred.ClientId, cred.Secret, "http://localhost:8080/auth/callback/google"),
+    )
+
     r := newRoom()
     //r.tracer = trace.New(os.Stdout)
     http.Handle("/chat", MustAuth(&templateHander{filename: "top.html"}))

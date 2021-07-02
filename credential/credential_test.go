@@ -7,7 +7,7 @@ import (
 
 func TestUnmarshall(t *testing.T) {
     cred := Load()
-    fmt.Printf(cred.SecurityKey)
-    fmt.Printf(cred.ClientId)
-    fmt.Printf(cred.Secret)
+    fmt.Println(cred.SecurityKey)
+    fmt.Println(cred.ClientId)
+    fmt.Println(cred.Secret)
 }

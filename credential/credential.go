@@ -14,7 +14,7 @@ type Credential struct {
 }
 
 func Load() Credential {
-    buf, err := ioutil.ReadFile("credential.yaml")
+    buf, err := ioutil.ReadFile("../credential/credential.yaml")
     if err != nil {
 	log.Fatal("failed to read credential.yaml", err)
 	panic(err)
